@@ -212,6 +212,7 @@ export default () => {
         setCurrentSystemRoleSettings={setCurrentSystemRoleSettings}
         temperatureSetting={temperatureSetting}
       /> */}
+      <MessageItem message={'嗨！欢迎光临，我是这里的房产顾问。如果你在寻找一个新家或者考虑房产投资，你来对地方了。我在这里帮你搞定一切。想知道更多信息，或者有任何疑问，随时跟我说哦。让我们开始你的房产寻找之旅吧！'} />
       <Index each={messageList()}>
         {(message, index) => (
           <MessageItem

@@ -14,7 +14,7 @@ interface Props {
   onRetry?: () => void
 }
 
-export default ({ role, message, showRetry, onRetry }: Props) => {
+export default ({ role = 'system', message, showRetry, onRetry }: Props) => {
   const roleClass = {
     system: 'bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300',
     user: 'bg-gradient-to-r from-purple-400 to-yellow-400',
