@@ -98,48 +98,57 @@ export default () => {
         })
       }
       const timestamp = Date.now()
-      const response = await fetch('/api/generate', {
+      console.log(requestMessageList)
+      const response = await fetch('http://localhost:5000/api/conversation/', {
         method: 'POST',
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
           messages: requestMessageList,
           time: timestamp,
-          pass: storagePassword,
-          sign: await generateSignature({
-            t: timestamp,
-            m: requestMessageList?.[requestMessageList.length - 1]?.content || '',
-          }),
-          temperature: temperature(),
+          // pass: storagePassword,
+          // sign: await generateSignature({
+          //   t: timestamp,
+          //   m: requestMessageList?.[requestMessageList.length - 1]?.content || '',
+          // }),
+          // temperature: temperature(),
         }),
         signal: controller.signal,
       })
+      console.log(response)
       if (!response.ok) {
         const error = await response.json()
         console.error(error.error)
         setCurrentError(error.error)
         throw new Error('Request failed')
       }
-      const data = response.body
-      if (!data)
-        throw new Error('No data')
+      // const data = response.body
+      const data = await response.json()
 
-      const reader = data.getReader()
-      const decoder = new TextDecoder('utf-8')
-      let done = false
+      console.log(data)
+      // data.content -> ''
+      setCurrentAssistantMessage(data?.content)
+      
+      // if (!data)
+      //   throw new Error('No data')
+      // console.log(data)
+      // const reader = data.getReader()
+      // const decoder = new TextDecoder('utf-8')
+      // let done = false
 
-      while (!done) {
-        const { value, done: readerDone } = await reader.read()
-        if (value) {
-          const char = decoder.decode(value)
-          if (char === '\n' && currentAssistantMessage().endsWith('\n'))
-            continue
+      // while (!done) {
+      //   const { value, done: readerDone } = await reader.read()
+      //   if (value) {
+      //     const char = decoder.decode(value)
+      //     if (char === '\n' && currentAssistantMessage().endsWith('\n'))
+      //       continue
 
-          if (char)
-            setCurrentAssistantMessage(currentAssistantMessage() + char)
+      //     if (char)
+      //       setCurrentAssistantMessage(currentAssistantMessage() + char)
 
-          isStick() && instantToBottom()
-        }
-        done = readerDone
-      }
+      //     isStick() && instantToBottom()
+      //   }
+      //   done = readerDone
+      // }
     } catch (e) {
       console.error(e)
       setLoading(false)
